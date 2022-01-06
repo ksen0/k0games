@@ -1,0 +1,183 @@
+<!--
+https://p5js.org/examples/dom-dom-form-elements.html
+https://p5js.org/examples/instance-mode-instance-container.html
+-->
+
+<!DOCTYPE html>
+<head>
+  <script src='../lib/p5.js'></script>
+
+
+</head>
+<body>
+  <div id='container'></div>
+  <script>
+    // Jan 1, 2022 11:30am >
+
+    var SCORE = 0;
+    var LEVEL = 0;
+
+    var myX = 0;
+    var myY = 0;
+    var diameter = 0;
+    var state = "monocle";
+    var notify=0;
+    var maxNotify = 20;
+
+    var yMove = 0;
+
+    var colorState;
+    var allPastColors = [];
+
+    var pillSpawnRate = 0.8;
+    var pills = [];
+
+  let score = 0;
+  let yoff = 0.0; // 2nd dimension of perlin noise
+  let width = 700;
+  let height = 700;
+
+  let sketch = function(p) {
+
+    // Interaction
+    p.keyPressed = function() {
+      if (p.keyCode === p.UP_ARROW || p.keyCode == 87) {
+        yMove = -1;
+      } else if (p.keyCode === p.DOWN_ARROW || p.keyCode == 83) {
+        yMove = 1;
+      }
+    }
+    p.keyReleased = function() {
+      yMove = 0;
+    }
+
+    // Color recombination functions
+    p.scrambleColor = function(old_color) {
+      return p.color(
+    		p.blue(old_color),
+    		p.red(old_color),
+    		p.green(old_color)
+    	);
+    }
+    p.flipColor = function(old_color) {
+      return p.color(
+    		255 - p.red(old_color),
+    		255 - p.green(old_color),
+    		255 - p.blue(old_color)
+    	);
+    }
+    p.combineColor = function(c1, c2, cStrength){
+      if (p.red(c2) == 255 && p.blue(c2) == 255 && p.green(c2) == 255 ) {
+        return p.color(
+          p.min(p.red(c1)*1.5, 255),
+          p.min(p.green(c1)*1.5, 255),
+          p.min(p.blue(c1)*1.5, 255)
+        );
+      }
+      if (p.red(c2) == 0 && p.blue(c2) == 0 && p.green(c2) == 0 ) {
+        return p.color(
+          p.red(c1) / 1.5,
+          p.green(c1) / 1.5,
+          p.blue(c1) / 1.5
+        );
+      }
+      if (p.red(c1) == 0 && p.blue(c1) == 0 && p.green(c1) == 0 ) {
+        return c2;
+      }
+      if (p.random() < 0.1) {
+      return p.color(
+        p.max(p.red(c1), p.red(c2)),
+        p.max(p.green(c1), p.green(c2)),
+        p.max(p.blue(c1), p.blue(c2))
+        );
+      }
+      return p.color(
+        (p.red(c1) + p.red(c2)) / 2,
+        (p.green(c1) + p.green(c2)) / 2,
+        (p.blue(c1) + p.blue(c2)) / 2,
+        );
+    }
+    p.setup = function(){
+      p.createCanvas(p.windowWidth, p.windowHeight);
+      myX = p.windowWidth/5;
+      myY = p.windowHeight/2;
+      diameter = 25;
+      colorState =  p.color(0, 0, 0);
+      p.frameRate(40);
+
+    }
+    p.draw = function() {
+      // there is a chance to add a pill
+      if (p.random() < pillSpawnRate && pills.length < 50) {
+        let distance = p.random();
+
+        let c = p.color(p.random(255), p.random(255), p.random(255)); // color
+        if (p.random() < 0.1) {
+          c = p.color(0,0,0);
+        } else if (p.random() < 0.2) {
+          c = p.color(255, 255, 255);
+        }
+        pills.push([
+          p.windowWidth - p.windowWidth/10, // pillX
+          p.random(p.windowHeight/10, p.windowHeight - p.windowHeight/10), // pillY
+          2 + 14*distance, // xMove
+          p.random(diameter/2, 2*diameter), // diameter
+          c, // pill color
+          distance
+        ]);
+      }
+
+      p.fill(colorState);
+      p.background(colorState);
+
+      if (notify > 0) {
+        let c = p.flipColor(colorState);
+        c.setAlpha(notify*(100/maxNotify));
+        p.fill(c);
+        notify -= 1;
+      } else {
+        p.fill(colorState);
+      }
+      p.stroke(p.flipColor(colorState));
+      // Draw self - centered on myX and my Y, but depending on the level
+      p.ellipse(myX, myY, diameter, diameter);
+      p.text(SCORE, myX-diameter, myY+10+diameter);
+      myY += 7*yMove;
+
+
+      let keepers = [];
+      for (var i =0; i< pills.length; i ++) {
+        // TODO ALPHA DEPENDS ON HOW SLOWLY IT MOVES !! but with exceptions
+        let c = pills[i][4];
+        c.setAlpha(255- 25*pills[i][5]);
+        p.fill(c);
+        p.stroke(p.scrambleColor(p.flipColor(pills[i][4])));
+        p.ellipse(pills[i][0], pills[i][1], pills[i][3], pills[i][3]);
+        pills[i][0] -= pills[i][2];
+
+        if (pills[i][0] >= myX) {
+          keepers.push(pills[i]);
+        } else if (p.abs(pills[i][1]-myY) <= pills[i][3]/2){
+          colorState = p.combineColor(colorState, pills[i][4], 0.5);//1-pills[i][5]/2);
+          allPastColors.push(colorState);
+          notify = maxNotify;
+          SCORE += 1;
+        }
+      }
+
+      pills = keepers;
+
+      for (var i =0; i< allPastColors.length; i ++) {
+        p.noStroke();
+        p.fill(allPastColors[i]);
+        p.rect(0, i*p.windowHeight/allPastColors.length, p.windowWidth/5-diameter*2, p.windowHeight/allPastColors.length);
+      }
+    }
+  };
+
+
+  new p5(sketch, 'container');
+  </script><!--
+  <div id="score">?</div>-->
+</body>
+</html>
