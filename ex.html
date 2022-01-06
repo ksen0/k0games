@@ -1,0 +1,66 @@
+<!--
+https://p5js.org/examples/dom-dom-form-elements.html
+https://p5js.org/examples/instance-mode-instance-container.html
+-->
+
+<!DOCTYPE html>
+<head>
+  <script src='p5.js'></script>
+
+
+</head>
+<body>
+  <div id='container'></div>
+  <script>
+
+  let score = 0;
+  let yoff = 0.0; // 2nd dimension of perlin noise
+  let width = 700;
+  let height = 700;
+
+  let sketch = function(p) {
+    p.setup = function(){
+      p.createCanvas(700, 700);
+      p.background("beige");
+    }
+    p.draw = function() {
+      score +=1;
+      window.document.getElementById('score').innerHTML = score;
+
+      p.background(51);
+      p.fill(255);
+      // We are going to draw a polygon out of the wave points
+      p.beginShape();
+
+      let xoff = 0; // Option #1: 2D Noise
+      // let xoff = yoff; // Option #2: 1D Noise
+
+      // Iterate over horizontal pixels
+      for (let x = 0; x <= width; x += 10) {
+        // Calculate a y value according to noise, map to
+
+        // Option #1: 2D Noise
+        let y = p.map(p.noise(xoff, yoff), 0, 1, 200, 300);
+
+        // Option #2: 1D Noise
+        // let y = map(noise(xoff), 0, 1, 200,300);
+
+        // Set the vertex
+        p.vertex(x, y);
+        // Increment x dimension for noise
+        xoff += 0.05;
+      }
+      // increment y dimension for noise
+      yoff += 0.01;
+      p.vertex(width, height);
+      p.vertex(0, height);
+      p.endShape(p.CLOSE);
+    }
+  };
+  new p5(sketch, 'container');
+
+
+  </script>
+  <div id="score">?</div>
+</body>
+</html>
