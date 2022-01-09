@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<head>
+  <script src='../lib/p5.js'></script>
+
+  <style>
+    body{
+      margin: 0px;
+      padding:0px;
+      overflow: hidden; /* Hide scrollbars */
+    }
+    #score{
+      position:absolute;
+      right:100px;
+      top:100px;
+      font-size:7em;
+      filter: drop-shadow(10px 7px 4px #03fc90);
+      -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: white;
+      font-style:italic;
+    }
+  </style>
+
+</head>
+<body>
+  <div id='container'></div>
+  <script>
+    // Jan 9 12a >
+
+    var skyRes = 100;
+    var sky = [];
+
+  let sketch = function(p) {
+
+    // Interaction
+    p.keyPressed = function() {
+      if (p.keyCode === p.UP_ARROW || p.keyCode == 87) {
+        skyRes = p.min(skyRes + 1, 500);
+      } else if (p.keyCode === p.DOWN_ARROW || p.keyCode == 83) {
+        skyRes = p.max(skyRes - 1, 10);
+      }
+      window.document.getElementById('score').innerHTML = skyRes;
+    }
+    p.keyReleased = function() {
+    }
+    p.mouseMoved = function() {
+    }
+    p.mouseReleased = function() {
+    }
+    p.setup = function(){
+      p.createCanvas(p.windowWidth, p.windowHeight);
+      p.frameRate(40);
+      sky = [
+        p.color(34, 34, 34), // dark dray
+        p.color(140,223, 214), // seafoam
+        p.color(63, 142, 252), //bright blue
+        p.color(162, 126, 142), //dusty pink
+        p.color(221, 153, 187),
+      ];
+    }
+    p.draw = function() {
+      p.noStroke();
+      for (var i=0; i<skyRes; i ++ ){
+        let baseC = sky[(i)%sky.length];
+        p.fill(p.color(
+          p.min(255, p.max(0, p.red(baseC) + p.random(-30, 30))),
+          p.min(255, p.max(0, p.green(baseC) + p.random(-30, 30))),
+          p.min(255, p.max(0, p.blue(baseC) + p.random(-30, 30)))
+        ));
+        p.rect(0, i*p.windowHeight/skyRes, p.windowWidth, p.windowHeight/skyRes);
+      }
+
+    }
+  };
+
+
+  new p5(sketch, 'container');
+  </script>
+  <div id="score"></div>
+</body>
+</html>
