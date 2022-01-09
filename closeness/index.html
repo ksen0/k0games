@@ -7,6 +7,23 @@ https://p5js.org/examples/instance-mode-instance-container.html
 <head>
   <script src='../lib/p5.js'></script>
 
+  <style>
+    body{
+      margin: 0px;
+      padding:0px;
+      overflow: hidden; /* Hide scrollbars */
+    }
+    #score{
+      position:absolute;
+      right:100px;
+      top:100px;
+      font-size:7em;
+      filter: drop-shadow(10px 7px 4px #03fc90);
+      -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: white;
+      font-style:italic;
+    }
+  </style>
 
 </head>
 <body>
@@ -14,28 +31,24 @@ https://p5js.org/examples/instance-mode-instance-container.html
   <script>
     // Jan 1, 2022 11:30am >
 
-    var SCORE = 0;
-    var LEVEL = 0;
+  var SCORE = 0;
+  var LEVEL = 0;
 
-    var myX = 0;
-    var myY = 0;
-    var diameter = 0;
-    var state = "monocle";
-    var notify=0;
-    var maxNotify = 20;
+  var myX = 0;
+  var myY = 0;
+  var diameter = 0;
+  var state = "monocle";
+  var notify=0;
+  var maxNotify = 20;
 
-    var yMove = 0;
+  var yMove = 0;
 
-    var colorState;
-    var allPastColors = [];
+  var colorState;
+  var allPastColors = [];
+  var tailY = [];
 
-    var pillSpawnRate = 0.8;
-    var pills = [];
-
-  let score = 0;
-  let yoff = 0.0; // 2nd dimension of perlin noise
-  let width = 700;
-  let height = 700;
+  var pillSpawnRate = 0.8;
+  var pills = [];
 
   let sketch = function(p) {
 
@@ -47,9 +60,11 @@ https://p5js.org/examples/instance-mode-instance-container.html
         yMove = 1;
       }
     }
+
     p.keyReleased = function() {
       yMove = 0;
     }
+
     p.mouseMoved = function() {
       myY = p.mouseY;
     }
@@ -113,6 +128,7 @@ https://p5js.org/examples/instance-mode-instance-container.html
 
     }
     p.draw = function() {
+
       // there is a chance to add a pill
       if (p.random() < pillSpawnRate && pills.length < 50) {
         let distance = p.random();
@@ -136,19 +152,72 @@ https://p5js.org/examples/instance-mode-instance-container.html
       p.fill(colorState);
       p.background(colorState);
 
+      for (var i=0; i< allPastColors.length; i ++) {
+        p.noStroke();
+        p.fill(allPastColors[i]);
+        p.rect(0, i*p.windowHeight/allPastColors.length, p.windowWidth/5-diameter*2, p.windowHeight/allPastColors.length);
+
+      }
+
+      for (var i=0; i< allPastColors.length; i ++) {
+        p.fill(allPastColors[i]);
+        if ( i >= allPastColors.length-7 ){
+          p.rect(myX - diameter*(7-(i - allPastColors.length + 7)) + diameter/2, tailY[i] - diameter/2, diameter, diameter);
+          /*p.beginShape();
+          p.vertex(myX - diameter*(7-(i - allPastColors.length + 7)) + diameter/2, tailY[i]);
+          if ( (i + 1) < tailY.length) {
+            p.vertex(myX - diameter*(7-(i + i- allPastColors.length + 7)) + diameter/2, tailY[i + i]);
+            p.vertex(myX - diameter*(7-(i + i- allPastColors.length + 7)) + diameter/2, tailY[i + i] + diameter);
+          } else {
+            p.vertex(myX - diameter/2, myY - diameter/2 );
+            p.vertex(myX - diameter/2, myY + diameter/2);
+          }
+          p.vertex(myX - diameter*(7-(i - allPastColors.length + 7)) + diameter/2, tailY[i] + diameter);
+          p.endShape(p.CLOSE);*/
+        }
+      }
+
       if (notify > 0) {
-        let c = p.flipColor(colorState);
-        c.setAlpha(notify*(100/maxNotify));
-        p.fill(c);
+        let c = p.color(255,255,255); //p.flipColor(colorState);
+        //c.setAlpha(notify*(100/maxNotify));
+        p.fill(p.lerpColor(p.color(0,0,0), p.color(255,255,255), notify/maxNotify));
         notify -= 1;
       } else {
-        p.fill(colorState);
+        p.fill("black");//colorState);
       }
-      p.stroke(p.flipColor(colorState));
+      p.stroke("white");//
+
       // Draw self - centered on myX and my Y, but depending on the level
-      p.ellipse(myX, myY, diameter, diameter);
-      p.text(SCORE, myX-diameter, myY+10+diameter);
+      p.rect(myX - diameter/2, myY - diameter/2, diameter)
+      p.fill(colorState);
+      p.ellipse(myX, myY, 2*diameter/3, 2*diameter/3);
+
+
+      c = p.flipColor(colorState);
+      if (SCORE > 0) {
+        window.document.getElementById('score').innerHTML = SCORE;
+        window.document.getElementById('score').style.filter = "drop-shadow(10px 7px 4px rgb("+
+          parseInt(p.red(c))+","+parseInt(p.green(c))+","+parseInt(p.blue(c))+"))";
+      }
+
+
       myY += 7*yMove;
+      for (var i=0; i< tailY.length; i ++) {
+        let hop = (i+1);
+        if (yMove != 0){
+          hop = hop/2;
+        }
+        if (myY < (tailY[i] - hop)){
+          tailY[i] -= hop;
+        } else if (tailY[i] > myY){
+          tailY[i] = myY
+        }
+        if (myY > (tailY[i] + hop)){
+          tailY[i] += hop;
+        } else if (tailY[i] < myY){
+          tailY[i] = myY
+        }
+      }
 
 
       let keepers = [];
@@ -165,6 +234,7 @@ https://p5js.org/examples/instance-mode-instance-container.html
           keepers.push(pills[i]);
         } else if (p.abs(pills[i][1]-myY) <= pills[i][3]/2){
           colorState = p.combineColor(colorState, pills[i][4], 0.5);//1-pills[i][5]/2);
+          tailY.push(myY);
           allPastColors.push(colorState);
           notify = maxNotify;
           SCORE += 1;
@@ -173,17 +243,12 @@ https://p5js.org/examples/instance-mode-instance-container.html
 
       pills = keepers;
 
-      for (var i =0; i< allPastColors.length; i ++) {
-        p.noStroke();
-        p.fill(allPastColors[i]);
-        p.rect(0, i*p.windowHeight/allPastColors.length, p.windowWidth/5-diameter*2, p.windowHeight/allPastColors.length);
-      }
     }
   };
 
 
   new p5(sketch, 'container');
-  </script><!--
-  <div id="score">?</div>-->
+  </script>
+  <div id="score"></div>
 </body>
 </html>
