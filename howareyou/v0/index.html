@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<head>
+<title>Choice-Free Survey Instrument v0</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@700&family=VT323&display=swap" rel="stylesheet">
+
+  <style>
+    body{
+      background-color: #d09edc;
+      margin: 0px;
+      padding:50px;
+      overflow: hidden; /* Hide scrollbars */
+    }
+#question{
+  font-size: 3em;
+  padding-bottom: 20px;
+  color:#fdf8fc;
+  font-family: 'Press Start 2P', cursive;
+  /*font-family: 'Space Mono', monospace;*/
+  /*font-family: 'VT323', monospace;*/
+}
+    #answer{
+      width:100%;
+      font-size:2em;
+      color:#9184d7;
+      filter: drop-shadow(10px 7px 4px #8a3cc4);
+      -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: #6064da;
+      font-style:italic;
+    }
+    p{
+      padding-top:20px;
+      color:#fdf8fc;
+    }
+  </style>
+
+  <script>
+    // start question counter at 1 and prev_question at ""
+      // 1. select random question - do not repeat (not same as previous question)
+      // 2. select random answer - do not repeat anything that has been answered (so unique stuff only, no yes/no)
+      // 3. easter egg? eg, if someone answers everything, you are able to type in an answer, and it sends an email to us. - as a reward you can send us your dats.
+
+      window.lettershown = 0
+      window.currenttext = 0
+      window.texts = [
+        "aching shoulders and itchy ear",
+        "Whatever is available",
+        "Overwhelmed by all the feelings",
+        "A mix of mind thoughts and body impulses"
+      ]
+
+      window.seen = []
+
+      window.texttoshow = "Hello, World"
+
+      function nextletter(silent=false){
+        if (window.lettershown >= window.texts[window.currenttext].length) {
+          window.lettershown = 1;
+          window.seen.push(window.currenttext);
+          percent = Math.min(100, Math.round(100*window.seen.length/window.texts.length))
+          document.getElementById("seencount").innerHTML = percent
+          window.currenttext = (window.currenttext + 1) % window.texts.length
+        } else { window.lettershown += 1; }
+        document.getElementById("answer").value = window.texts[window.currenttext].substring(0, window.lettershown);
+      }
+
+  </script>
+</head>
+<body onkeypress="nextletter()">
+  <div id="question">What do you feel?</div>
+  <input id="answer" onchange="nextletter(silent=true)" \>
+  <p>Just keep typing<br><em>Your wellbeing is of my utmost concern</em><br><span id="seencount">0</span>%</p>
+</body>
+</html>
