@@ -57,19 +57,21 @@
       window.texttoshow = "Hello, World"
 
       function nextletter(silent=false){
-        if (window.lettershown >= window.texts[window.currenttext].length) {
-          window.lettershown = 1;
-          window.seen.push(window.currenttext);
-          percent = Math.min(100, Math.round(100*window.seen.length/window.texts.length))
-          document.getElementById("seencount").innerHTML = percent
-          window.currenttext = (window.currenttext + 1) % window.texts.length
-        } else { window.lettershown += 1; }
+        if (!silent){
+          if (window.lettershown >= window.texts[window.currenttext].length) {
+            window.lettershown = 1;
+            window.seen.push(window.currenttext);
+            percent = Math.min(100, Math.round(100*window.seen.length/window.texts.length))
+            document.getElementById("seencount").innerHTML = percent
+            window.currenttext = (window.currenttext + 1) % window.texts.length
+          } else { window.lettershown += 1; }
+        }
         document.getElementById("answer").value = window.texts[window.currenttext].substring(0, window.lettershown);
       }
 
   </script>
 </head>
-<body onkeypress="nextletter()">
+<body onkeydown="nextletter()" onkeyup="nextletter(silent=true)">
   <div id="question">What do you feel?</div>
   <input id="answer" onchange="nextletter(silent=true)" \>
   <p>Just keep typing<br><em>Your wellbeing is of my utmost concern</em><br><span id="seencount">0</span>%</p>
