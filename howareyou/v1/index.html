@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <head>
-<title>Choice-Free Survey Instrument v0</title>
+<title>Choice-Free Survey Instrument v1</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,13 +16,14 @@
       padding:0px;
       overflow: hidden; /* Hide scrollbars */
       background-image: url('share_it_all.jpg');
-      background-position: 0px 0px;
+      background-position: 0px -586px;
     }
     #question{
       padding:5%;
       width:93%;
+      margin-top:50px;
       padding-top:50px;
-      font-size: 3em;
+      font-size: 2.5em;
       padding-bottom: 20px;
       color:#fdf8fc;
       font-family: 'Press Start 2P', monospace;
@@ -37,6 +38,7 @@
       width:90%;
       margin: 5%;
       font-size:2em;
+      font-family: sans-serif;
       color:#9184d7;
       filter: drop-shadow(10px 7px 4px #8a3cc4);
       -webkit-text-stroke-width: 1px;
@@ -50,12 +52,11 @@
     #info{
       padding: 5%;
       margin-bottom:0px;
-      font-size:2em;
+      font-family: sans-serif;
+      font-size:1.5em;
       background-color: black;
-      position:absolute;
       width:93%;
       opacity: 0;
-      bottom:50px;
       color:#fdf8fc;
     }
 
@@ -66,7 +67,7 @@
 
   <script>
 
-      window.creep = 0;
+      window.creep = 586;
       window.op = 0;
 
       window.lettershown = 0;
