@@ -198,7 +198,7 @@
 
 
             // Incremantal, not random: window.currenttext = (window.currenttext + 1) % window.texts.length
-            let options =[];
+            let options = [];
             for (var i=0; i<window.texts.length; i++){
               if (window.seen.indexOf(i) >= 0){
                 continue;
@@ -206,11 +206,12 @@
               options.push(i);
             }
 
-            if (options.length == window.texts.length) {
-              // TODO SOMETHING :)
+            if (window.seen.length == window.texts.length) {
+              window.seen = [];
+              window.currenttext = Math.floor(Math.random() * window.texts.length);
+            } else {
+              window.currenttext = options[Math.floor(Math.random() * options.length)];
             }
-
-            window.currenttext = options[Math.floor(Math.random() * options.length)];
           } else { window.lettershown += 1; }
         }
         document.getElementById("answer").value = window.texts[window.currenttext].substring(0, window.lettershown);
