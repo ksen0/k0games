@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<head>
+<title>Choice-Free Survey Instrument v0</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@700&family=VT323&display=swap" rel="stylesheet">
+
+  <style>
+    body{
+      background-color: #d09edc;
+      margin: 0px;
+      background: transparent\9;
+      background-size: 100% auto;
+      padding:0px;
+      overflow: hidden; /* Hide scrollbars */
+      background-image: url('share_it_all.jpg');
+      background-position: 0px 0px;
+    }
+    #question{
+      padding:5%;
+      width:93%;
+      padding-top:50px;
+      font-size: 3em;
+      padding-bottom: 20px;
+      color:#fdf8fc;
+      font-family: 'Press Start 2P', monospace;
+      /*font-family: 'Space Mono', monospace;*/
+      /*font-family: 'VT323', monospace;*/
+      background-color: black;
+      margin-left:0px;
+      margin-right:0px;
+      text-align: center;
+    }
+    #answer{
+      width:90%;
+      margin: 5%;
+      font-size:2em;
+      color:#9184d7;
+      filter: drop-shadow(10px 7px 4px #8a3cc4);
+      -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: #6064da;
+      font-style:italic;
+    }
+    p {
+      padding:0px;
+      margin:0px;
+    }
+    #info{
+      padding: 5%;
+      margin-bottom:0px;
+      font-size:2em;
+      background-color: black;
+      position:absolute;
+      width:93%;
+      opacity: 0;
+      bottom:50px;
+      color:#fdf8fc;
+    }
+
+    .perc {
+      font-family: 'Press Start 2P', monospace;
+    }
+  </style>
+
+  <script>
+
+      window.creep = 0;
+      window.op = 0;
+
+      window.lettershown = 0;
+      window.texts = [
+        "a bit annoyed",
+        "A bit cold",
+        "A BIT CONFUSED",
+        "a bit surprised",
+        "A BIT THIRSTY",
+        "a bit unsure",
+        "A combination of anxiety but also reminding my self to be grateful",
+        "A little bit ancioux",
+        "a little bit of tired, weariness, yeah deep tired",
+        "a little confused",
+        "A mix between being tired and busy",
+        "A mix of mind thoughts and body impulses",
+        "A slight hangover",
+        "Accompanied by tinnitus, trying to figure out if whistling ears are now how I feel everyday.",
+        "aching shoulders and itchy ear",
+        "alright. my back is sore",
+        "amongst the ominous",
+        "anxiety and fatigue",
+        "CLONE YOUR LOOK",
+        "Cosy on my new rose colourd sofa",
+        "Curious as well",
+        "Curious in a blanket",
+        "Desire for somewhere comfortable to sit",
+        "Drained of energy",
+        "Emotions and sensations",
+        "everything all at once and at different times",
+        "Excitement, bit nervous, focused, energised",
+        "exhaustion, but excitement at the same time", // because of the talks and hearing/meeting all this people here, as well as
+        "anxiety about what comes next in the following months",
+        "Frazzled but somewhat satisfied",
+        "Full of anticipation",
+        "FULL OF CAFFINE",
+        "full of food",
+        "Fuzziness... but not like a cute feeling, more like TV static",
+        "fuzzy and warm",
+        "getting a bit hungry. looking forward to lunch.",
+        "Good, Lucky, relief from the little public speech stress",
+        "Happiness to be in the audience and see the wonder of sergina",
+        "HAPPY / CONTENT",
+        "Headache 🤕 tired",
+        "HORNY FOR CARBS",
+        "hot + bothered",
+        "hunger, lethargy, foggy, rumbling in my stomach.",
+        "Hungry for action",
+        "I am feeling my keyboard",
+        "I am feeling well right now, thanks!",
+        "I am happy",
+        "I am horny",
+        "I am in waiting mode",
+        "I bit of a cold",
+        "i can't tell.",
+        "I DON'T KNOW",
+        "I FEEL A LOT",
+        "I feel confused.",
+        "I feel desire",
+        "I feel excited",
+        "I feel excited but also anxious",
+        "I feel my data being extracted as we speak",
+        "I feel so many feelings, too many feelings too intensely",
+        "I FEEL STRANGE",
+        "I feel stuck",
+        "I feel that you care about how I feel, which I appreciate.",
+        "i need a cup of tea",
+        "i need space.",
+        "I'm feeling mischeviuous",
+        "impressions of the world surrounding me",
+        "Intrigued, feeling fizzy full of possibility but also a bit flat at the same time",
+        "I’m feeling drunkenness at this very moment",
+        "Like a canvas that is often repainted",
+        "Loves it. Sliving.",
+        "Many things all at once which leads to many feeling lost",
+        "my breath, my fingers on the keyboard, feet a bit cold",
+        "My hands are a bit cold",
+        "MY KNEES HURT",
+        "NEED A BREAK",
+        "Nervous, annoyed at myself, intrigued",
+        "noise, muscle soreness, cold, loneliness, pressure",
+        "numb yet my heart races",
+        "ok. its the morning.",
+        "On edge but turned on",
+        "Out of sorts",
+        "Overwhelmed by all the feelings",
+        "PAIN I SAID",
+        "Pulsing in my pants",
+        "Reflective, neither tired or awake, immersed",
+        "shifting between cold and excited",
+        "Sick and anxious",
+        "Stuck in a loop",
+        "sun on my face",
+        "Sweaty top lip",
+        "Sweet and sour",
+        "the glow of sunshine",
+        "tired and engaged",
+        "Tired and zoomed out. and very hungry.",
+        "tired anxious excited",
+        "TRAIN THEM UP",
+        "Very warm feet",
+        "void and empty",
+        "warm and fuzzy",
+        "We r not ready 2 say goodbye",
+        "Whatever is available"
+      ]
+
+      window.seen = []
+      window.currenttext = Math.floor(Math.random() * window.texts.length);
+
+      window.texttoshow = "Hello, World"
+
+      function nextletter(silent=false){
+        window.creep += 1;
+        document.body.style.backgroundPosition = "0px -" + window.creep+"px"
+        window.op += 0.01;
+        if (window.op >1) { window.op = 1; }
+
+        document.getElementById("info").style.opacity = window.op;
+
+
+        if (!silent){
+          if (window.lettershown >= window.texts[window.currenttext].length) {
+            window.lettershown = 1;
+            window.seen.push(window.currenttext);
+            percent = Math.min(100, Math.round(100*window.seen.length/window.texts.length))
+            document.getElementById("seencount").innerHTML = percent
+
+
+            // Incremantal, not random: window.currenttext = (window.currenttext + 1) % window.texts.length
+            let options =[];
+            for (var i=0; i<window.texts.length; i++){
+              if (window.seen.indexOf(i) >= 0){
+                continue;
+              }
+              options.push(i);
+            }
+
+            if (options.length == window.texts.length) {
+              // TODO SOMETHING :)
+            }
+
+            window.currenttext = options[Math.floor(Math.random() * options.length)];
+          } else { window.lettershown += 1; }
+        }
+        document.getElementById("answer").value = window.texts[window.currenttext].substring(0, window.lettershown);
+      }
+
+  </script>
+</head>
+<body onkeydown="nextletter()" onkeyup="nextletter(silent=true)">
+  <div id="question">WHAT DO YOU FEEL?</div>
+  <input id="answer" onchange="nextletter(silent=true)" \>
+  <div id="info">This is the choice-free survey instrument. Your wellbeing is of my utmost concern. You have encountered
+    <span class="perc"><span id="seencount">0</span>%</span> of all feelings.
+    For the choice-rich survey instrument, please click here.</div>
+</body>
+</html>
