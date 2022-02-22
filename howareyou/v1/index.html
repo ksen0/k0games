@@ -8,42 +8,47 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@700&family=VT323&display=swap" rel="stylesheet">
 
   <style>
+    #question, #info{
+      background-color: #6369d7;
+      color:#fdfefe;
+      padding:5%;
+      width:93%;
+      padding-bottom:50px;
+      margin-top:50px;
+      padding-top:50px;
+      margin-left:0px;
+      margin-right:0px;
+      margin-bottom:0px;
+      text-align: left;
+    }
     body{
       background-color: #d09edc;
       margin: 0px;
       background: transparent\9;
-      background-size: 100% auto;
+      background-size: 120% auto;
       padding:0px;
       overflow: hidden; /* Hide scrollbars */
       background-image: url('share_it_all.jpg');
       background-position: 0px -586px;
     }
     #question{
-      padding:5%;
-      width:93%;
-      margin-top:50px;
-      padding-top:50px;
-      font-size: 2.5em;
-      padding-bottom: 20px;
-      color:#fdf8fc;
+      font-size: 1.7em;
       font-family: 'Press Start 2P', monospace;
       /*font-family: 'Space Mono', monospace;*/
       /*font-family: 'VT323', monospace;*/
-      background-color: black;
-      margin-left:0px;
-      margin-right:0px;
-      text-align: center;
     }
-    #answer{
-      width:90%;
-      margin: 5%;
-      font-size:2em;
-      font-family: sans-serif;
-      color:#9184d7;
+    a, a.visited, #answer, .perc{
       filter: drop-shadow(10px 7px 4px #8a3cc4);
       -webkit-text-stroke-width: 1px;
       -webkit-text-stroke-color: #6064da;
-      font-style:italic;
+    }
+    #answer{
+      color:#9184d7;
+      width:70%;
+      margin: 5%;
+      font-size:2em;
+      font-family: sans-serif;
+      font-style: italic;
     }
     p {
       padding:0px;
@@ -51,15 +56,21 @@
     }
     #info{
       padding: 5%;
-      margin-bottom:0px;
+      padding-right:25%;
+      width:73%;
       font-family: sans-serif;
-      font-size:1.5em;
-      background-color: black;
-      width:93%;
+      font-size:1.4em;
       opacity: 0;
-      color:#fdf8fc;
     }
 
+    a, a.visited, .perc{
+      font-size:0.7em;
+    }
+    a, a.visited{
+      color:white;
+      font-family: 'Press Start 2P', monospace;
+      text-decoration: none;
+    }
     .perc {
       font-family: 'Press Start 2P', monospace;
     }
@@ -99,8 +110,7 @@
         "Emotions and sensations",
         "everything all at once and at different times",
         "Excitement, bit nervous, focused, energised",
-        "exhaustion, but excitement at the same time", // because of the talks and hearing/meeting all this people here, as well as
-        "anxiety about what comes next in the following months",
+        "exhaustion, but excitement at the same time because of the talks and hearing/meeting all this people here, as well as anxiety about what comes next in the following months",
         "Frazzled but somewhat satisfied",
         "Full of anticipation",
         "FULL OF CAFFINE",
@@ -188,7 +198,6 @@
 
         document.getElementById("info").style.opacity = window.op;
 
-
         if (!silent){
           if (window.lettershown >= window.texts[window.currenttext].length) {
             window.lettershown = 1;
@@ -221,9 +230,11 @@
 </head>
 <body onkeydown="nextletter()" onkeyup="nextletter(silent=true)">
   <div id="question">WHAT DO YOU FEEL?</div>
-  <input id="answer" onchange="nextletter(silent=true)" \>
+  <input id="answer" onchange="nextletter(silent=true)" placeholder="Start typing here."\>
   <div id="info">This is the choice-free survey instrument. Your wellbeing is of my utmost concern. You have encountered
-    <span class="perc"><span id="seencount">0</span>%</span> of all feelings.
-    For the choice-rich survey instrument, please click here.</div>
+    <span class="perc"><span id="seencount">0</span>%</span> of all feelings. The data that <span class="perc">#Sergina</span> extracted in 8 participatory performances
+     over 2019-2021 was handled; from it, 100 unique (duplicates removed), fleshy (of at least 3 words) feelings have been collated here for you
+     to randomly experience.
+    For the choice-rich survey instrument, please <a href=https://forms.gle/e2AriKoa97t4zny49>click here</a>.</div>
 </body>
 </html>
