@@ -11,15 +11,12 @@
     #question, #info{
       background-color: #6369d7;
       color:#fdfefe;
-      padding:5%;
-      width:93%;
       padding-bottom:50px;
       margin-top:50px;
       padding-top:50px;
       margin-left:0px;
       margin-right:0px;
       margin-bottom:0px;
-      text-align: left;
     }
     body{
       background-color: #d09edc;
@@ -32,6 +29,9 @@
       background-position: 0px -586px;
     }
     #question{
+      padding:5%;
+      width:93%;
+      text-align:center;
       font-size: 1.5em;
       font-family: 'Press Start 2P', monospace;
       /*font-family: 'Space Mono', monospace;*/
@@ -44,7 +44,7 @@
     }
     #answer{
       color:#9184d7;
-      width:70%;
+      width:90%;
       margin: 5%;
       font-size:2em;
       font-family: sans-serif;
@@ -56,10 +56,11 @@
     }
     #info{
       padding: 5%;
-      padding-right:25%;
-      width:73%;
+      padding-right:8%;
+      text-align:left;
+      width:90%;
       font-family: sans-serif;
-      font-size:1.4em;
+      font-size:1em;
       opacity: 0;
     }
 
@@ -193,8 +194,11 @@
       function nextletter(silent=false){
         window.creep += 1;
         document.body.style.backgroundPosition = "0px -" + window.creep+"px"
-        window.op += 0.01;
-        if (window.op >1) { window.op = 1; }
+
+        if (window.seen.length > 2) {
+          window.op += 0.01;
+          if (window.op >1) { window.op = 1; }
+        }
 
         document.getElementById("info").style.opacity = window.op;
 
@@ -231,10 +235,11 @@
 <body onkeydown="nextletter()" onkeyup="nextletter(silent=true)">
   <div id="question">WHAT DO YOU FEEL?</div>
   <input id="answer" onchange="nextletter(silent=true)" placeholder="Start typing here."\>
-  <div id="info">This is the choice-free survey instrument. Your wellbeing is of my utmost concern. You have encountered
-    <span class="perc"><span id="seencount">0</span>%</span> of all feelings. The data that <span class="perc">#Sergina</span> extracted in 8 participatory performances
-     over 2019-2021 was handled; from it, 100 unique (duplicates removed), fleshy (of at least 3 words) feelings have been collated here for you
-     to randomly experience.
-    For the choice-rich survey instrument, please <a href=https://forms.gle/e2AriKoa97t4zny49>click&nbsp;here</a>.</div>
+  <div id="info">This is the Choice-Free Survey Instrument. Your wellbeing is of my utmost concern.You have encountered
+    <span class="perc"><span id="seencount">0</span>%</span> of all feelings.
+The Dirty Data handled in the creation of this Choice-Free Survey Instrument was extracted out of the mouths and typing bodies of audiences from 9
+Participatory Performances by <span class="perc">#Sergina</span> and her agents that took place between 2019-2021.
+Of this, 100 unique (duplicates removed), fleshy (of at least 3 words) feelings are randomly fed back for you to lap up.
+For the Choice-Rich Survey Instrument, please <a href=https://forms.gle/e2AriKoa97t4zny49>click&nbsp;here</a>.</div>
 </body>
 </html>
