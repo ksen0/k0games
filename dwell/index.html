@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<head>
+<title>Dwell</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body{
+    }
+    p{
+    }
+    .current{
+    	background-color:#dedede;
+    }
+    .turn {
+    	padding:10px;
+    }
+    #time_line, #time_text{
+    	font-family: 'Space Mono', monospace
+    }
+    #turndetails, .turn, p {
+    	font-family: 'Dosis', sans-serif;
+    }
+    .turn button{
+    	display:none;
+    }
+    .current button{
+    	display:inline;
+    }
+    #turndetails {
+    	color: #d14;
+    }
+  </style>
+
+  <script>
+
+  	window.MOCK = true;
+  	window.xhr = undefined;
+  	window.years_passed = 0;
+  	window.last_yp = 0;
+
+  	window.state = "idle";
+  	window.extra_time = 0;
+
+
+	function understand(){
+	    document.getElementById("answer").value = window.texts[window.currenttext].substring(0, window.lettershown);
+	}
+
+	function timeline_update(manual_override=undefined) {
+		if (manual_override !== undefined && manual_override >= 0 && manual_override < 100 && manual_override*1 == manual_override) {
+			window.last_yp = manual_override*1;
+			window.years_passed = manual_override*1;
+			document.getElementById("time_line").innerHTML = "";
+		}
+		// console.log("X".repeat(window.years_passed) + "-".repeat(100-window.years_passed));
+		console.log("----",window.years_passed)
+		document.getElementById("time_line").innerHTML = "X".repeat(window.years_passed) + ".".repeat(100-window.years_passed) + "<br/>" + document.getElementById("time_line").innerHTML;
+		if (window.years_passed <= 100 ) {
+			if (window.last_yp == 1) {
+				document.getElementById("time_text").innerHTML = "...and so, " + window.last_yp + " year passes.";
+			} else {
+				document.getElementById("time_text").innerHTML = "...and so, " + window.last_yp + " years pass.";
+			}
+		}
+		if (window.years_passed == 100) {
+			document.getElementById("turndetails").innerHTML = "After such 100 years, the dweller leaves the dwelling.<br/>How, and why?";
+			document.getElementById('story_turn').innerHTML="";
+			document.getElementById('time_turn').innerHTML="";
+			document.getElementById('story_turn').classList.remove("current");
+			document.getElementById('time_turn').classList.remove("current");
+		}
+	}
+
+	function roll(which) {
+		if (window.state == "idle") {
+
+			if (window.extra_time == 0 || which == "story") {
+				document.getElementById('turndetails').innerHTML = "&nbsp;";
+			}
+			
+			window.state = "waiting_"+which;
+
+
+			if (window.MOCK === true) {
+				var mock_result = [0,1,2,3,4,5][Math.floor(Math.random()*6)];
+		        if (window.state == "waiting_time") {
+			        timeroll_result(mock_result);
+			    } else if (window.state == "waiting_story") {
+			        storyroll_result(mock_result);
+			    } else if (window.state == "waiting_research") {
+			        researchroll_result(mock_result);
+			    }
+			}
+			return;
+
+			window.xhr = new XMLHttpRequest();
+			var url = "https://api.random.org/json-rpc/2/invoke";
+			window.xhr.open("POST", url, true);
+			window.xhr.setRequestHeader("Content-Type", "application/json");
+			window.xhr.onreadystatechange = roll_result
+			var data = JSON.stringify({
+			    "jsonrpc": "2.0",
+			    "method": "generateIntegers",
+			    "params": {
+			        "apiKey": ":)",
+			        "n": 1,
+			        "min": 0,
+			        "max": 5,
+			        "replacement": true
+			    },
+			    "id": 0
+			});
+			window.xhr.send(data);
+		}
+	}
+
+	function timeroll_result(result) {
+		if (window.extra_time > 0){
+			window.extra_time --;
+			if (window.extra_time > 0){
+				document.getElementById('turndetails').innerHTML = "Still some more time needed...";
+			}else {
+				document.getElementById('turndetails').innerHTML = "Finally, the research has been completed.";
+			}
+		}
+		if (window.extra_time == 0) {
+			document.getElementById('story_turn').classList.add("current");
+			document.getElementById('time_turn').classList.remove("current");
+		}
+
+		var timehop = [
+			1,
+			2,
+			3,
+			15,
+			23,
+			37
+			];
+		window.last_yp = timehop[result]
+		if (window.years_passed + window.last_yp > 100){
+			window.last_yp = 100 - window.years_passed
+		}
+		window.years_passed = window.years_passed + window.last_yp;
+
+		timeline_update();
+		document.getElementById('time_text').value = window.years_passed;
+        window.state = "idle";
+	}
+
+	function storyroll_result(result) {
+
+		var story = [
+			"The dweller makes a new connection in the dwelling",
+			"The dweller is challenged by a complication in the dwelling",
+			"The dweller encounters a resource in the dwelling",
+			"Something strange is suddenly sensed by the dweller",
+			"Something is broken, repaired, or transformed without the dweller's intent",
+			"Something is broken, repaired, or transformed with the dweller's intent"
+			];
+
+		document.getElementById('turndetails').innerHTML = story[result];
+        window.state = "idle";
+
+		document.getElementById('time_turn').classList.add("current");
+		document.getElementById('story_turn').classList.remove("current");
+	}
+
+	function researchroll_result(result) {
+		console.log(result);
+
+		var research_cost = [
+			"This research is not too hard! It only costs 1 time turn.",
+			"This research is not too hard! It only costs 1 time turn.",
+			"This research a bit challenging... It costs 2 time turns.",
+			"This research a bit challenging... It costs 2 time turns.",
+			"This research is very difficult. It costs 3 time turns.",
+			"This research is very difficult. It costs 3 time turns.",
+			];
+		document.getElementById('turndetails').innerHTML = research_cost[result];
+		window.extra_time += 1;
+		if (result > 1 ){
+			window.extra_time += 1;
+		}
+		if (result > 3 ){
+			window.extra_time += 1;
+		}
+		console.log(">>>"+window.extra_time)
+        window.state = "idle";
+
+		document.getElementById('time_turn').classList.add("current");
+		document.getElementById('story_turn').classList.remove("current");
+	}
+  </script>
+</head>
+<body>
+
+<h1 id="time_text">The dweller does not leave the dwelling for 100 years.</h1>
+
+<h2 id="turndetails">&nbsp;</h2> 
+<p id="story_turn" class="turn current">Story turn <button onclick="roll('story')">I want to tell a story</button> <button onclick="roll('research')">I want to understand</button></p>
+<p id="time_turn" class="turn">Time turn <button onclick="roll('time')">...and so time passes.</button> </p>
+<div id="time_line" ></div> 
+<br><br>
+<!--
+<p>
+	<a href=# onclick="roll(3)">I want to tell a story</a>
+</p>
+<p>
+	<a href=# onclick="understand()">I want to understand</a>
+</p>
+-->
+
+<p style="position:absolute;bottom:5px;left:5px;">At each time turn, very few years can pass, or many. The possibilities are: 1, 2, 3, 15, 23, or 37 years.</p>
+<!--<input value="0" id="yp_manual" onchange="timeline_update(document.getElementById('yp_manual').value)" style="position:absolute;bottom:5px;right:5px;">-->
+
+
+</body>
+</html>
