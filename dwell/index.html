@@ -1,5 +1,6 @@
 
 <!DOCTYPE html>
+
 <head>
 <title>Dwell</title>
 
@@ -8,11 +9,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
   <style>
     body{
+    	padding-left:50px;
+    	padding-right:50px;
     }
     p{
     }
     .turn {
-    	padding:10px;
+    	padding-top:10px;
+    	padding-bottom:30px;
     	color:#ccc;
     }
     .current {
@@ -24,11 +28,11 @@
     #turndetails, .turn, p {
     	font-family: 'Dosis', sans-serif;
     }
-    .turn button{
+    .turn{
     	display:none;
     }
-    .current button{
-    	display:inline;
+    .current{
+    	display:block;
     }
     #turndetails {
     	color: #d14;
@@ -175,8 +179,8 @@
 		var research_cost = [
 			"This research is not too hard! It only costs 1 time turn.",
 			"This research is not too hard! It only costs 1 time turn.",
-			"This research a bit challenging... It costs 2 time turns.",
-			"This research a bit challenging... It costs 2 time turns.",
+			"This research is a bit challenging... It costs 2 time turns.",
+			"This research is a bit challenging... It costs 2 time turns.",
 			"This research is very difficult. It costs 3 time turns.",
 			"This research is very difficult. It costs 3 time turns.",
 			];
