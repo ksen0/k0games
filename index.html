@@ -1,89 +1,189 @@
-<!--
-  https://www.w3schools.com/howto/howto_css_bg_gradient_scroll.asp
-  https://www.w3schools.com/howto/howto_js_scrolldrawing.asp
--->
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!DOCTYPE html>
-<head>
-<title>k 0</title>
-<style type="text/css">
-  body {
-    background: linear-gradient(55deg, #0D324D 0%, #7F5A83 85%);
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js"></script>
+  <style>
+
+
+    body{
+      margin: 0px;
+      padding:0px;
+      overflow: hidden; /* Hide scrollbars */
+    }
+    .container{
+      float:left;
+      height:100%;
+      display: block;
+      width:33.33333%;
+    }
+    #links{
+        display: block;
+        position:absolute;
+        width:100%;
+    }
+    #links div{
+      float:left;
+      height:100%;
+      display: block;
+      width:33.33333%;
+      margin-top:20%;
   }
-  .footer {
-    padding:30px;
-    margin:20px;
-    color:white;
-    opacity: 0.5;
-    font-style:italic;
-  }
-  .footer a {
-    color:white;
-  }
-  .footer a:hover {
-    font-style:normal;
-  }
-  .block {
-    padding:30px;
-    margin:20px;
-    background-color:white;
-    opacity: 0.3;
-    letter-spacing: 5px;
-  }
-  .block img {
-    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
-    filter: grayscale(100%);
-  }
-  .block:hover {
-      opacity: 1;
-      font-weight:bold;
-      font-variant:small-caps;
-  }
-  .block:hover img{
-    -webkit-filter: grayscale(0%); /* Safari 6.0 - 9.0 */
-    filter: grayscale(0%);
-  }
-  .block img {
-    width: 50%;
-  }
-  .block a {
-    color:black;
-  }
-  .block.med {
+  #links div a{
+      display: block;
     width:50%;
-    max-width:500px;
-  }
-  .block.sm {
-    width:20%;
-    max-width:200px;
-  }
-  .block.med img {
-    width:75%;
-  }
-  .block.sm img {
-    width:100%;
-  }
-  .block.lg {
-    width:90%;
-    max-width:1000px;
-  }
-</style>
-</head>
+    margin:auto;
+    text-align: center;
+      /*      background-color: rgba(255, 255, 255, 0.7);*/
+      padding-left:5%;
+      padding-right:5%;
+      color:#000;
+      filter: drop-shadow(3px 2px 2px #fff);
+    }
+    #links div a:hover{
+      color:#fff;
+      filter: drop-shadow(3px 2px 2px #000);
+    }
+
+
+    @media screen and (max-width: 600px) {
+      #containera,#containerc{
+        display: none;
+      }
+       #links div a.desk{
+        color:#555;
+       }
+      #links div{
+          height:70px;
+          display: block;
+          width:100%;
+      }
+      #containerb{
+        width:100%;
+      }
+
+    }
+  </style>
+    </head>
 <body>
-  <!--
-    <div class="block med">
-      <a href="closeness/"><img src="closeness/pic.png"><br>[w.i.p.]</a>
-    </div>-->
+  <div id='containera' class='container'></div>
+  <div id='containerb' class='container'></div>
+  <div id='containerc' class='container'></div>
+  <div id="links">
 
-      <div class="block med">
-        <a href="howareyou/v1/"><img src="howareyou/v1/want.png"><br>#SERGINA'S CHOICE-FREE SURVEY INSTRUMENT</a><br>
-        In collaboration with <a href=https://www.ellyclarke.com/>Elly Clarke</a>
-      </div>
+    <div><a href="https://k0games.itch.io" class='desk'>k0.games</a></div>
 
-  <div class="footer">
-    Last Updated: Feb 2022<br>
-    Created by <a href="http://xnze.ro">KSEN ZERO</a>
+    <div><a href="howareyou/">#SERGINA'S CHOICE-FREE SURVEY INSTRUMENT<br \>
+    in collaboration with Elly Clarke</a></div>
+
+    <div><a href="g_o_a_l/" class='desk'>WASD // try to make it to the top as many times as possible</a></div>
+
   </div>
 
+    <script type="text/javascript">
+
+let makesketch = function(clicktext, bubbletext, xoffset, yoffset, colors, period, containerid) {
+    return function(p) {
+    p.mousePressed = function() {
+        p.c = p.random(p.colors);
+        p.c.setAlpha(70);
+        p.pressed = true;
+        p.fill(p.c);
+        p.rect(0,0,p.dWidth,p.dHeight);
+        p.fill("#000")
+        p.text(clicktext, p.mouseX-xoffset, p.mouseY-yoffset);
+        p.c.setAlpha(10);
+        p.fill(p.random(p.colors));
+    }
+    p.mouseReleased = function() {
+      p.pressed = false;
+    }
+    p.setup = function(){
+        p.dWidth = document.getElementById(containerid).offsetWidth;
+        p.dHeight = document.getElementById(containerid).offsetHeight;
+        p.myCanvas = p.createCanvas(p.dWidth, p.dHeight);
+
+        p.myCanvas.parent(containerid);
+
+        //p.createCanvas(p.windowWidth, p.windowHeight);
+        p.pressed = false;
+        p.colors = colors.map((c) => p.color(c));
+        p.noStroke("#fff");
+        p.frameRate(60);
+        p.fill(p.random(p.colors));
+        p.rect(0,0,p.dWidth,p.dHeight);
+        p.colors.forEach((c) => c.setAlpha(10));
+    }
+    p.draw = function() {
+        if (p.pressed) {
+            p.fill(p.color(0,0,0,100));
+            p.text(clicktext, p.mouseX-xoffset + p.random(-5,5),
+                     p.mouseY-yoffset + p.random(-5,5));
+        }
+        
+        if (p.frameCount % period == 0 || p.x === undefined) {
+            p.noStroke();
+            p.c = p.random(p.colors);
+            p.x = p.random(p.dWidth);
+            p.y = p.random(p.dHeight);
+            p.s = p.random(Math.max(p.dWidth, p.dHeight)) + 70;
+        }
+        p.fill(p.c);
+        p.text(bubbletext, p.x-xoffset, p.y-yoffset);
+        p.circle(p.x, p.y, p.s/period * (p.frameCount%period));
+    }
+
+    p.windowResized = function() {
+        p.dWidth = document.getElementById(containerid).offsetWidth;
+        p.dHeight = document.getElementById(containerid).offsetHeight;
+        p.resizeCanvas(p.dWidth, p.dHeight);
+        p.pressed = false;
+        p.c = p.random(p.colors);
+        p.c.setAlpha(30);
+        p.fill(p.c);
+        p.rect(0,0,p.dWidth,p.dHeight);
+        p.c.setAlpha(10);
+    }
+  }
+};
+
+  new p5(makesketch('k0.games', 'hi!', 6, 3, [
+           /* "#300",
+            "#030",
+            "#ded",
+            "#fee",
+            "#255",
+            "#daa",*/
+            "#ddd",
+            "#666",
+            "#888",
+            "#aaa",
+            "#bbb",
+            "#ccc",
+            "#eee"
+        ], 15, 'containera'), 'containera');
+  new p5(makesketch("WHAT DO YOU FEEL ?", "WHAT DO YOU FEEL ?", 55, 3, [
+            "#0f334e",
+            "#8543c7",
+            "#7f55ca",
+            "#8543c7",
+            "#7f55ca",
+            "#f7c0ff",
+            "#6e96df"
+        ], 11, 'containerb'), 'containerb');
+  new p5(makesketch('g_o_a_l', 'g_o_a_l', 17, 3, [
+           "#ff0", "#f00",
+           "#02f",
+           "#0df",
+           "#0ea",
+           "#0b4",
+           "#0cb",
+           "#0fd"
+        ], 17, 'containerc'), 'containerb');
+
+    </script>
 </body>
+
+
+
 </html>
