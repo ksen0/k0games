@@ -10,9 +10,11 @@ var conwaymode = 0;
 var conwaymix = [];
 let isMovingLeft, isMovingRight, isMovingUp, isMovingDown;
 
+var mouseMode = true;
+
+// next up:
 // there are yellow walls that cannot be passed, forming a maze
 // the pestilence eats them
-
 
 
 function setup() {
@@ -49,6 +51,7 @@ function zero(){
 
 function draw() {
 	noStroke();
+	checkMouseMode();
 	
 	if (conwaymode == 0) {
   	handleKeys();		
@@ -235,32 +238,89 @@ function reset(){
 }
 
 
+function checkMouseMode() {
+	return;
+
+	// todo base these on where the current thing is
+	let x1, x2, y1, y2;
+
+	if (mouseMode) {	
+		if (mouseX < x) {
+			isMovingLeft = true;
+			isMovingRight = false;
+		}
+		if (mouseX > x) {
+			isMovingRight = true;
+			isMovingLeft = false;
+		}
+		if (mouseY < y) {
+			isMovingUp = true;
+			isMovingDown = false;
+			if (isMovingRight && y-mouseY > (mouseX - x)*1.5){
+				isMovingRight = false;
+			}
+			if (isMovingLeft && y-mouseY > (x - mouseX)*1.5){
+				isMovingLeft = false;
+			}
+		}
+		if (mouseY > y) {
+			isMovingDown = true;
+			isMovingUp = false;
+			if (isMovingRight && mouseY-y > (mouseX - x)*1.5){
+				isMovingRight = false;
+			}
+			if (isMovingLeft && mouseY-y > (x - mouseX)*1.5){
+				isMovingLeft = false;
+			}
+		}
+	}
+}
+function mouseMoved() {
+	if (!isMovingUp && !isMovingDown && !isMovingRight && !isMovingLeft){
+		mouseMode = true;
+	}
+}
+
 function keyPressed() {
-  if (key === 'w') {
+	if (mouseMode) {
+		mouseMode = false;
+		isMovingUp = false;
+		isMovingDown = false;
+		isMovingLeft = false;
+		isMovingRight = false;
+	}
+  if (key === 'w' || key === 'W' || keyCode === UP_ARROW) {
     isMovingUp = true;
   }
-  if (key === 's') {
+  if (key === 's' || key === 'S' || keyCode === DOWN_ARROW) {
     isMovingDown = true;
   }
-  if (key === 'a') {
+  if (key === 'a' || key === 'A' || keyCode === LEFT_ARROW) {
     isMovingLeft = true;
   }
-  if (key === 'd') {
+  if (key === 'd' || key === 'D' || keyCode === RIGHT_ARROW) {
     isMovingRight = true;
   }
 }
 
 function keyReleased() {
-  if (key === 'w') {
+	if (mouseMode) {
+		mouseMode = false;
+		isMovingUp = false;
+		isMovingDown = false;
+		isMovingLeft = false;
+		isMovingRight = false;
+	}
+  if (key === 'w' || key === 'W' || keyCode === UP_ARROW) {
     isMovingUp = false;
   }
-  if (key === 's') {
+  if (key === 's' || key === 'S' || keyCode === DOWN_ARROW) {
     isMovingDown = false;
   }
-  if (key === 'a') {
+  if (key === 'a' || key === 'A' || keyCode === LEFT_ARROW) {
     isMovingLeft = false;
   }
-  if (key === 'd') {
+  if (key === 'd' || key === 'D' || keyCode === RIGHT_ARROW) {
     isMovingRight = false;
   }
 }
