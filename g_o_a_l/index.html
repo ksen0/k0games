@@ -1,6 +1,7 @@
 <html>
     <head>
-    <script src="mySketch.js" type="text/javascript"></script><script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js" type="text/javascript"></script>
+      <title>game of (after) life</title>
+    <script src="goal.js" type="text/javascript"></script><script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js" type="text/javascript"></script>
   <style>
     body{
       margin: 0px;
@@ -42,37 +43,39 @@
   <span id="tutorial">
   </span>
   <script>
+
     window.tutorialDone = false;
     document.getElementById('tutorial').innerHTML = "Red gets tired and wants to eat. Green is edible. Blue might be poison!<br \>How many times can you get to the top?<br \>Use WASD or arrow keys to move.<br \>";
     document.getElementById('help').innerHTML = "HELP";
-        function showDiv() {
-          console.log("show")
-            document.getElementById('tutorial').classList.remove('fade-out');
-            document.getElementById('tutorial').style.display = 'block';
-            document.getElementById('tutorial').style.opacity = '1';
-            }
-        function hideDiv() {
-          console.log("hide")
-            document.getElementById('tutorial').style.display = 'none';
-            }
-        document.addEventListener('keydown', function(event) {
 
-          if (window.tutorialDone) {
-            return
-          }
-            const key = event.key.toLowerCase();
-            const keysToHideDiv = ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'];
-            document.getElementById('tutorial').classList.add('fade-out');
-            setTimeout(() => {
-                    document.getElementById('tutorial').style.display = 'none';
-                    document.getElementById('tutorial').style.transition = '';
-                    document.getElementById('tutorial').classList.remove('fade-out');
-                    document.getElementById('help').style.display = 'block';
-                }, 5000);
-            window.tutorialDone = true;
-        });
-        document.getElementById('help').addEventListener('mouseover', showDiv);
-        document.getElementById('help').addEventListener('mouseout', hideDiv);
+    function showDiv() {
+      console.log("show")
+        document.getElementById('tutorial').classList.remove('fade-out');
+        document.getElementById('tutorial').style.display = 'block';
+        document.getElementById('tutorial').style.opacity = '1';
+        }
+    function hideDiv() {
+      console.log("hide")
+        document.getElementById('tutorial').style.display = 'none';
+        }
+    document.addEventListener('keydown', function(event) {
+
+      if (window.tutorialDone) {
+        return
+      }
+        const key = event.key.toLowerCase();
+        const keysToHideDiv = ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'];
+        document.getElementById('tutorial').classList.add('fade-out');
+        setTimeout(() => {
+                document.getElementById('tutorial').style.display = 'none';
+                document.getElementById('tutorial').style.transition = '';
+                document.getElementById('tutorial').classList.remove('fade-out');
+                document.getElementById('help').style.display = 'block';
+            }, 5000);
+        window.tutorialDone = true;
+    });
+    document.getElementById('help').addEventListener('mouseover', showDiv);
+    document.getElementById('help').addEventListener('mouseout', hideDiv);
     </script>
 </body>
 
