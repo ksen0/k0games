@@ -12,10 +12,6 @@ let isMovingLeft, isMovingRight, isMovingUp, isMovingDown;
 
 var mouseMode = true;
 
-// next up:
-// there are yellow walls that cannot be passed, forming a maze
-// the pestilence eats them
-
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
@@ -132,8 +128,8 @@ function draw() {
 			}
 		}
 		conwaymix = newconwaymix;
-		conwaymode -= 0;
-		if (total == 0 || conwaymode == 0){
+		conwaymode -= 1;
+		if (total == 0 || conwaymode <= 0){
 			difficulty += 1;
 			conwaymode = 0;
 			zero();
@@ -230,7 +226,7 @@ function draw() {
 
 function reset(){
 		state[int(random(NX))][NY-5] = 1;
-		//state[int(NX/2)][NY-5] = 1; // TODO allow clones
+		//state[int(NX/2)][NY-5] = 1; // TODO allow clones????
 		//isMovingLeft = false;
 		//isMovingRight = false;
 		///isMovingUp = false;
